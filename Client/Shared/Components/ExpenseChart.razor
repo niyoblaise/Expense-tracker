@@ -1,0 +1,55 @@
+﻿@using ExpenseTracker.Shared
+@inject IJSRuntime JSRuntime
+
+@if (Expenses == null || !Expenses.Any())
+{
+    <div class="text-muted">No data to display</div>
+}
+else
+{
+    <div style="height:260px">
+        <canvas id="@ChartId" width="400" height="200"></canvas>
+    </div>
+}
+
+@code {
+    [Parameter] public List<Expense> Expenses { get; set; } = new();
+    [Parameter] public string ChartId { get; set; } = string.Empty;
+    private string _lastKey = string.Empty;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (Expenses.Any())
+            {
+            var labels = Expenses
+                                 .GroupBy(e => (e.Category ?? "Uncategorized").Trim())
+                                 .Select(g => string.IsNullOrWhiteSpace(g.Key) ? "Uncategorized" : g.Key)
+                                     .ToList();
+
+            var data = Expenses
+                               .GroupBy(e => (e.Category ?? "Uncategorized").Trim())
+                               .Select(g => g.Sum(e => e.Amount ?? 0))
+                                   .ToList();
+
+                if (labels.Count > 0 && data.Sum() > 0)
+                {
+                    await JSRuntime.InvokeVoidAsync("renderExpenseChart", ChartId, labels, data);
+                }
+            }
+        }
+        catch
+        {
+            // swallow to avoid breaking the page; chart is non-critical
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Build a simple key so re-render triggers JS when data changes
+        var count = Expenses?.Count ?? 0;
+        var sum = Expenses?.Sum(e => e.Amount ?? 0) ?? 0;
+        _lastKey = $"{count}:{sum}";
+    }
+}

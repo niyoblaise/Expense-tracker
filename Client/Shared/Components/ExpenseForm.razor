@@ -1,0 +1,81 @@
+﻿@using ExpenseTracker.Shared
+@using ExpenseTracker.Client.Shared.Components
+@using ExpenseTracker.Client.Services
+@inject IExpenseService ExpenseService
+
+<EditForm Model="expense" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <InputText @bind-Value="expense.Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Amount</label>
+        <InputNumber @bind-Value="expense.Amount" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Date</label>
+        <InputDate @bind-Value="expense.Date" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Category</label>
+        <InputText @bind-Value="expense.Category" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Notes</label>
+        <InputTextArea @bind-Value="expense.Notes" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary me-2">Save</button>
+    <button type="button" class="btn btn-secondary" @onclick="ResetForm">Cancel</button>
+</EditForm>
+
+@code {
+    [Parameter] public EventCallback OnSaved { get; set; }
+    [Parameter] public Expense? ExpenseToEdit { get; set; }
+
+    private Expense expense = new();
+
+    protected override void OnParametersSet()
+    {
+        if (ExpenseToEdit != null)
+        {
+            expense = new Expense
+            {
+                Id = ExpenseToEdit.Id,
+                Title = ExpenseToEdit.Title,
+                Amount = ExpenseToEdit.Amount,
+                Date = ExpenseToEdit.Date,
+                Category = ExpenseToEdit.Category,
+                Notes = ExpenseToEdit.Notes
+            };
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (expense.Id == Guid.Empty)
+        {
+            expense.Id = Guid.NewGuid();
+            await ExpenseService.AddExpenseAsync(expense);
+        }
+        else
+        {
+            await ExpenseService.UpdateExpenseAsync(expense);
+        }
+
+        await OnSaved.InvokeAsync();
+        ResetForm();
+    }
+
+    private void ResetForm()
+    {
+        expense = new Expense();
+    }
+}

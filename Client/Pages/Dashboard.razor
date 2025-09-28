@@ -1,0 +1,109 @@
+﻿@page "/dashboard"
+@using ExpenseTracker.Shared
+@using ExpenseTracker.Client.Services
+@using ExpenseTracker.Client.Shared.Components
+@inject IExpenseService ExpenseService
+@inject IIncomeService IncomeService
+
+<h3 class="mb-4">Dashboard</h3>
+
+<div class="row mb-4 g-3">
+    <div class="col-12 col-md-3">
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Total Incomes</div>
+                        <div class="fs-4 fw-bold">@FormatRwf(totalIncomes)</div>
+                    </div>
+                    <span class="badge bg-success">+</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small">Total Expenses</div>
+                        <div class="fs-4 fw-bold">@FormatRwf(totalExpenses)</div>
+                    </div>
+                    <span class="badge" style="background-color:#ff7a00;color:#0b0b0f;">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="text-muted small">Net (Income - Expense)</div>
+                <div class="fs-4 fw-bold">@FormatRwf(netBalance)</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="text-muted small">Items (E/I)</div>
+                <div class="fs-4 fw-bold">@expenses.Count / @incomes.Count</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-lg-6">
+        <div class="card">
+            <div class="card-header">Expenses by Category</div>
+            <div class="card-body">
+                <ExpenseChart Expenses="expenses" ChartId="dashboardCategoryChart" />
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card">
+            <div class="card-header">Incomes by Source</div>
+            <div class="card-body">
+                <ExpenseChart Expenses="incomeAsExpenses" ChartId="dashboardIncomeChart" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Expense> expenses = new();
+    private List<Income> incomes = new();
+    private List<Expense> incomeAsExpenses = new();
+    private decimal totalExpenses = 0;
+    private decimal totalIncomes = 0;
+    private decimal netBalance = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        expenses = (await ExpenseService.GetExpensesAsync()).ToList();
+        incomes = (await IncomeService.GetIncomesAsync()).ToList();
+
+        totalExpenses = expenses.Sum(e => e.Amount ?? 0);
+        totalIncomes = incomes.Sum(i => i.Amount ?? 0);
+        netBalance = totalIncomes - totalExpenses;
+
+        
+        incomeAsExpenses = incomes.Select(i => new Expense
+        {
+            Id = i.Id,
+            Title = i.Title,
+            Amount = i.Amount,
+            Date = i.Date,
+            Category = i.Source,
+            Notes = i.Notes
+        }).ToList();
+    }
+
+    private static string FormatRwf(decimal amount) => $"RWF {amount.ToString("N0")}";
+}

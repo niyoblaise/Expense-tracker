@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "5NdJ90F6frM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\BLAISE\\source\\repos\\ExpenseTracker\\ExpenseTracker\\Shared\\ExpenseTracker.Shared.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\BLAISE\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.36\\microsoft.windowsdesktop.app.ref.6.0.36.nupkg.sha512",
+    "C:\\Users\\BLAISE\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.36\\microsoft.netcore.app.ref.6.0.36.nupkg.sha512",
+    "C:\\Users\\BLAISE\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.36\\microsoft.aspnetcore.app.ref.6.0.36.nupkg.sha512"
+  ],
+  "logs": []
+}

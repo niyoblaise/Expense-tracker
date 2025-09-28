@@ -1,0 +1,12 @@
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\bin\Debug\net6.0\ExpenseTracker.Shared.deps.json
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\bin\Debug\net6.0\ExpenseTracker.Shared.dll
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\bin\Debug\net6.0\ExpenseTracker.Shared.pdb
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\obj\Debug\net6.0\ExpenseTracker.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\obj\Debug\net6.0\ExpenseTracker.Shared.AssemblyInfoInputs.cache
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\obj\Debug\net6.0\ExpenseTracker.Shared.AssemblyInfo.cs
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\obj\Debug\net6.0\ExpenseTracker.Shared.csproj.CoreCompileInputs.cache
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\obj\Debug\net6.0\ExpenseTracker.Shared.sourcelink.json
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\obj\Debug\net6.0\ExpenseTracker.Shared.dll
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\obj\Debug\net6.0\refint\ExpenseTracker.Shared.dll
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\obj\Debug\net6.0\ExpenseTracker.Shared.pdb
+C:\Users\BLAISE\source\repos\ExpenseTracker\ExpenseTracker\Shared\obj\Debug\net6.0\ref\ExpenseTracker.Shared.dll

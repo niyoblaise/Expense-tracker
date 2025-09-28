@@ -1,0 +1,93 @@
+﻿@page "/expenses"
+@using ExpenseTracker.Shared
+@using ExpenseTracker.Client.Services
+
+@inject IExpenseService ExpenseService
+@inject IJSRuntime JSRuntime
+
+<h3 class="mb-4">Expense Tracker</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary" @onclick="() => ShowFormForNewExpense()">Add New Expense</button>
+    <a class="btn btn-outline-secondary ms-2" href="api/expenses/export/csv">Export CSV</a>
+</div>
+
+@if (showForm)
+{
+    <ExpenseForm OnSaved="OnFormSaved" ExpenseToEdit="expenseToEdit" />
+}
+
+<div class="mt-4">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var exp in expenses)
+            {
+                <tr>
+                    <td>@exp.Title</td>
+                    <td>@(exp.Amount.HasValue? exp.Amount.Value.ToString("C") : "")</td>
+                    <td>@(exp.Date.HasValue? exp.Date.Value.ToShortDateString() : "")</td>
+                    <td>@exp.Category</td>
+                    <td>@exp.Notes</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger me-2" @onclick="() => DeleteExpense(exp.Id)">Delete</button>
+                        <button class="btn btn-sm btn-secondary" @onclick="() => EditExpense(exp)">Edit</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    private List<Expense> expenses = new();
+    private Expense? expenseToEdit;
+    private bool showForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadExpenses();
+    }
+
+    private async Task LoadExpenses()
+    {
+        expenses = (await ExpenseService.GetExpensesAsync()).ToList();
+        StateHasChanged();
+    }
+
+    private void ShowFormForNewExpense()
+    {
+        expenseToEdit = null;
+        showForm = true;
+    }
+
+    private void EditExpense(Expense exp)
+    {
+        expenseToEdit = exp;
+        showForm = true;
+    }
+
+    private async Task DeleteExpense(Guid id)
+    {
+        if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this expense?"))
+        {
+            await ExpenseService.DeleteExpenseAsync(id);
+            await LoadExpenses();
+        }
+    }
+
+    private async Task OnFormSaved()
+    {
+        showForm = false;
+        await LoadExpenses();
+    }
+}
